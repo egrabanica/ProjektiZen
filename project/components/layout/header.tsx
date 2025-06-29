@@ -112,15 +112,15 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4">
+          <div className="md:hidden py-4 border-t">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'block py-2 text-base font-medium transition-colors hover:text-primary',
+                  'block py-3 px-1 text-base font-medium transition-colors hover:text-primary touch-target',
                   pathname === item.href
-                    ? 'text-foreground'
+                    ? 'text-foreground border-l-2 border-primary bg-primary/5'
                     : 'text-muted-foreground'
                 )}
                 onClick={() => setIsOpen(false)}
@@ -128,10 +128,10 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-            <div className="mt-4 space-y-2">
+            <div className="mt-6 space-y-3 px-1">
               <Button
                 variant="ghost"
-                className="w-full"
+                className="w-full justify-start h-12"
                 onClick={() => {
                   router.push('/auth/sign-in');
                   setIsOpen(false);
@@ -140,7 +140,7 @@ export function Header() {
                 Sign In
               </Button>
               <Button
-                className="w-full"
+                className="w-full justify-start h-12"
                 onClick={() => {
                   router.push('/auth/sign-up');
                   setIsOpen(false);

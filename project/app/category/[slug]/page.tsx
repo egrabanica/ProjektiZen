@@ -119,7 +119,7 @@ function ArticleCard({ article }: { article: any }) {
   return (
     <article className="group">
       <Link href={article.href}>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           <div className="relative aspect-video overflow-hidden rounded-lg">
             <Image
               src={article.imageUrl}
@@ -128,30 +128,30 @@ function ArticleCard({ article }: { article: any }) {
               className="object-cover transition-transform group-hover:scale-105"
             />
           </div>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
               {article.views && (
-                <Badge variant="secondary">{article.views} views</Badge>
+                <Badge variant="secondary" className="text-xs">{article.views} views</Badge>
               )}
               {article.lastUpdated && (
-                <Badge variant="destructive">Live</Badge>
+                <Badge variant="destructive" className="text-xs">Live</Badge>
               )}
               {article.trending && (
-                <Badge variant="default">Trending</Badge>
+                <Badge variant="default" className="text-xs">Trending</Badge>
               )}
               {article.featured && (
-                <Badge variant="outline">Featured</Badge>
+                <Badge variant="outline" className="text-xs">Featured</Badge>
               )}
             </div>
-            <h3 className="text-xl font-semibold leading-tight group-hover:text-primary">
+            <h3 className="text-lg sm:text-xl font-semibold leading-tight group-hover:text-primary">
               {article.title}
             </h3>
-            <p className="text-muted-foreground line-clamp-3">
+            <p className="text-muted-foreground line-clamp-2 sm:line-clamp-3 text-sm sm:text-base">
               {article.excerpt}
             </p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span>{article.author}</span>
-              <time dateTime={article.date}>
+            <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+              <span className="truncate">{article.author}</span>
+              <time dateTime={article.date} className="flex-shrink-0">
                 {article.lastUpdated || article.timeAgo || new Date(article.date).toLocaleDateString()}
               </time>
             </div>
@@ -162,44 +162,51 @@ function ArticleCard({ article }: { article: any }) {
   );
 }
 
-export default function CategoryPage({ params }: { params: { slug: string } }) {
-  const category = categories[params.slug as keyof typeof categories];
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const category = categories[slug as keyof typeof categories];
 
   if (!category) {
     notFound();
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold">{category.title}</h1>
-        <p className="text-lg text-muted-foreground">{category.description}</p>
+    <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <div className="space-y-3 sm:space-y-4">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{category.title}</h1>
+        <p className="text-base sm:text-lg text-muted-foreground">{category.description}</p>
       </div>
 
       <Suspense fallback={<Loading />}>
-        <Tabs defaultValue="most-read" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 gap-4">
-            <TabsTrigger value="most-read" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Most Read
-            </TabsTrigger>
-            <TabsTrigger value="live" className="flex items-center gap-2">
-              <Radio className="h-4 w-4" />
-              Live News
-            </TabsTrigger>
-            <TabsTrigger value="latest" className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              Latest
-            </TabsTrigger>
-            <TabsTrigger value="featured" className="flex items-center gap-2">
-              <Star className="h-4 w-4" />
-              Featured
-            </TabsTrigger>
-            <TabsTrigger value="trending" className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
-              Trending
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="most-read" className="space-y-6 sm:space-y-8">
+          <div className="overflow-x-auto">
+            <TabsList className="grid w-full min-w-max grid-cols-5 gap-1 sm:gap-2 h-auto p-1">
+              <TabsTrigger value="most-read" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Most Read</span>
+                <span className="xs:hidden">Read</span>
+              </TabsTrigger>
+              <TabsTrigger value="live" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                <Radio className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Live News</span>
+                <span className="xs:hidden">Live</span>
+              </TabsTrigger>
+              <TabsTrigger value="latest" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>Latest</span>
+              </TabsTrigger>
+              <TabsTrigger value="featured" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                <Star className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Featured</span>
+                <span className="xs:hidden">Top</span>
+              </TabsTrigger>
+              <TabsTrigger value="trending" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 text-xs sm:text-sm">
+                <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">Trending</span>
+                <span className="xs:hidden">Hot</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="most-read">
             <Card>
@@ -210,7 +217,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {articles.mostRead.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
@@ -228,7 +235,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {articles.liveNews.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
@@ -246,7 +253,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {articles.latest.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
@@ -264,7 +271,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {articles.featured.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}
@@ -282,7 +289,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-8">
+                <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                   {articles.trending.map((article) => (
                     <ArticleCard key={article.id} article={article} />
                   ))}

@@ -1,8 +1,10 @@
+'use client';
 /*
  *   Copyright (c) 2025 
  *   All rights reserved.
  */
 import { notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -54,14 +56,10 @@ const articles = {
   },
 };
 
-export function generateStaticParams() {
-  return Object.keys(articles).map((slug) => ({
-    slug,
-  }));
-}
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default function ArticlePage() {
+  const params = useParams();
+  const slug = params.slug as string;
   const article = articles[slug as keyof typeof articles];
 
   if (!article) {
